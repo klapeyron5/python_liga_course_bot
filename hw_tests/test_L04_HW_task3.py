@@ -1,14 +1,5 @@
-import sys
 from src import test
-from importlib import reload
-
-
-def run_test():
-    if 'HW_examples' not in sys.modules:
-        from HW_examples import L04_HW_task3
-    else:
-        global L04_HW_task3
-        reload(L04_HW_task3)
+from .utils import get_module_test
 
 
 def test_func(**kwargs):
@@ -28,5 +19,5 @@ cases = [{test.INPUT_stdin: x, test.TEST_FUNC: test_func} for x in [
     [1234, 1234],
     [-18, 3],
 ]]
-results = test.run_test_cases(run_test, cases=cases)
+results = test.run_test_cases(get_module_test('L04_HW_task3'), cases=cases)
 print(results)

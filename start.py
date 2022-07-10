@@ -1,7 +1,7 @@
 import os
 import logging
 from configparser import ConfigParser
-from src.bot import SQL_Bot
+from src.bot import PythonBot
 from src.utils import parse_config, get_insert_assignment
 from src.db_worker import DB_Worker
 import cx_Oracle
@@ -24,7 +24,7 @@ def migrate_assignments_to_db(config: ConfigParser) -> None:
 
 def start_bot(config: ConfigParser) -> None:
     # db_worker = DB_Worker(config)
-    sql_bot = SQL_Bot(config, db_worker=None)
+    sql_bot = PythonBot(config, db_worker=None)
     # sql_bot = SQL_Bot(config, db_worker=None)
     sql_bot.run()
     print('Бот готов к работе и ждет сообщений.')

@@ -12,10 +12,10 @@ logging.basicConfig(filename='log.txt',
                     format='%(asctime)s:%(levelname)s:%(message)s')
 
 
-class SQL_Bot:
+class PythonBot:
 
     def __init__(self, config: ConfigParser, db_worker: DB_Worker) -> None:
-        logging.info('Инициализация SQL_Bot.')
+        logging.info('Инициализация PythonBot.')
         self.config = config
         self.bot_conf = config._sections['bot']
         self.db_worker = db_worker

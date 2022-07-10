@@ -13,6 +13,10 @@ CASE_KEYS = {INPUT_stdin, INPUT_arg, INPUT_kwarg, TEST_FUNC}
 
 
 def run_test_cases(func, cases):
+    """
+    func: func to test
+    cases: list of test cases
+    """
     tests_passed = []
     tests_failed = []
     for i, case in enumerate(cases):
