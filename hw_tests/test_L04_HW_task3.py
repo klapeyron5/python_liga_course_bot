@@ -14,6 +14,7 @@ def test_func(**kwargs):
 {stdin[0]} % {stdin[1]} = {stdin[0] % stdin[1]}\n"
     assert s == stdout
 
+
 cases = [{test.INPUT_stdin: x, test.TEST_FUNC: test_func} for x in [
     [1, 2],
     [1234, 1234],
