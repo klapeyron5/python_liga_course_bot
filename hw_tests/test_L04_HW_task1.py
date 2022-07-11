@@ -10,19 +10,11 @@ def test_func(**kwargs):
     assert stdin+'\n' == stdout, f'stdout "{stdout}" does not equals stdin "{stdin}"'
 
 
-results = test.run_test_cases(test.get_module_test('L04_HW_task1'), [
+cases = [
     {
-        test.INPUT_stdin: 'НУ Я НА ТОЧКЕ, А ВЫ ГДЕ?',
+        test.INPUT_stdin: x,
         test.TEST_FUNC: test_func,
-    },
-    {
-        test.INPUT_stdin: 'kek, я застрял в текстурах...',
-        test.TEST_FUNC: test_func,
-    },
-    {
-        test.INPUT_stdin: 'ребята, gg, bb!',
-        test.TEST_FUNC: test_func,
-    },
-])
+    } for x in ['НУ Я НА ТОЧКЕ, А ВЫ ГДЕ?','kek, я застрял в текстурах...','ребята, gg, bb!']
+]
 
-print(results)
+print(test.run('L04_HW_task1', cases, package_name='hw_examples'))

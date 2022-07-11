@@ -74,28 +74,37 @@ def get_module_test(module_name, package='hw_examples'):
     return body
 
 
-def run(test_module, tested_module_name, cases, tested_func_name, package='hw_examples'):
-    if not _check_task_name_format(tested_module_name):
-        raise Exception(f'Wrong format of tested module name: {tested_module_name}')
+def run(module_name, cases, func_name=None, test_module=None, package_name='hw_examples'):
+    """
+    module_name: имя модуля, который тестируем (имя файла с решением задания)
+    func_name: функция, которую тестируем. Если None, значит вся логика выполняется в global scope модуля (подходит для первых ДЗ)
+    cases: кейсы для тестирования func_name или module_name
+    test_module: функция, которая тестирует модуль целиком (оформление, имена функций, документация, используемые либы и т.д.)
+    package_name: имя пакета, в котором лежит решенное задание (hw_examples для примеров верных заданий, tmp - для полученных от бота)
+    """
+    out_result = 1
+    out_log = "Тесты пройдены"
+
+    if not _check_task_name_format(module_name):
+        raise Exception(f'Wrong format of tested module name: {module_name}')
 
     # global module
     # tested_module_name = package + '.' + tested_module_name
     # if package not in sys.modules:
     #     tested_module = importlib.import_module(tested_module_name)
-    tested_module = _reimport_module(tested_module_name, package)
-    testing_func = getattr(tested_module, tested_func_name)
+    if func_name is None:
+        tested_func = lambda: _reimport_module(module_name, package_name)
+    else:
+        tested_module = _reimport_module(module_name, package_name)
+        tested_func = getattr(tested_module, func_name)
+        try:
+            test_module(tested_module)
+        except:
+            out_result = 0
+            out_log = "Проблема с оформлением кода (имена функций, документация, использование библиотек"
+            return out_result, out_log
 
-    out_result = 1
-    out_log = "Тесты пройдены"
-
-    try:
-        test_module(tested_module)
-    except:
-        out_result = 0
-        out_log = "Проблема с оформлением кода (имена функций, документация, использование библиотек"
-        return out_result, out_log
-
-    results = run_test_cases(testing_func, cases=cases)
+    results = run_test_cases(tested_func, cases=cases)
     if len(results['failed']) != 0:
         out_result = 0
         out_log = f"Провалено {len(results['failed'])} тестов из {len(results['passed'])}"

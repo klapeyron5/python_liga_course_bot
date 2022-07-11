@@ -31,4 +31,6 @@ cases = [{test.INPUT_stdin: x, test.TEST_FUNC: test_func} for x in [
     ]]
 
 
-print(test.run(test_module, 'L05_HW_project', cases, 'pipeline', package='hw_examples'))
+# print(test.run(test_module, 'L05_HW_project', cases, 'pipeline', package_name='hw_examples'))
+print(test.run('L05_HW_project', cases, func_name='pipeline', test_module=test_module, package_name='hw_examples'))
+
