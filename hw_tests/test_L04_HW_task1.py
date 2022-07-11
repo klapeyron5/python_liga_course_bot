@@ -1,5 +1,4 @@
-from src import test
-from .utils import get_module_test
+from hw_tests import utils as test
 
 
 def test_func(**kwargs):
@@ -11,7 +10,7 @@ def test_func(**kwargs):
     assert stdin+'\n' == stdout, f'stdout "{stdout}" does not equals stdin "{stdin}"'
 
 
-results = test.run_test_cases(get_module_test('L04_HW_task1'), [
+results = test.run_test_cases(test.get_module_test('L04_HW_task1'), [
     {
         test.INPUT_stdin: 'НУ Я НА ТОЧКЕ, А ВЫ ГДЕ?',
         test.TEST_FUNC: test_func,

@@ -1,7 +1,6 @@
-from src import test
+from hw_tests import utils as test
 import inspect
 import re
-from .utils import get_module_test
 
 
 def test_func(**kwargs):
@@ -26,5 +25,5 @@ cases = [{test.INPUT_stdin: x, test.TEST_FUNC: test_func} for x in [
     [1, 3],
     [10, 2],
 ]]
-results = test.run_test_cases(get_module_test('L04_HW_project'), cases=cases)
+results = test.run_test_cases(test.get_module_test('L04_HW_project'), cases=cases)
 print(results)
