@@ -68,7 +68,7 @@ def _reimport_module(task_name, package):
 
 def get_module_test(module_name, package='hw_examples'):
     if not _check_task_name_format(module_name):
-        raise Exception(f'Wrong format of tested module name: {module_name}')
+        raise Exception(f'Неверный формат имени тестируемого модуля: {module_name}')
     def body():
         return _reimport_module(module_name, package)
     return body
@@ -101,13 +101,13 @@ def run(module_name, cases, func_name=None, test_module=None, package_name='hw_e
             test_module(tested_module)
         except:
             out_result = 0
-            out_log = "Проблема с оформлением кода (имена функций, документация, использование библиотек"
+            out_log = "Проблема с оформлением кода (имена функций, документация, использование библиотек)"
             return out_result, out_log
 
     results = run_test_cases(tested_func, cases=cases)
     if len(results['failed']) != 0:
         out_result = 0
-        out_log = f"Провалено {len(results['failed'])} тестов из {len(results['passed'])}"
+        out_log = f"Провалено {len(results['failed'])} тестов из {len(results['passed'])+len(results['failed'])}"
         return out_result, out_log
 
     return out_result, out_log

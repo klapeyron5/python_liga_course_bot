@@ -17,4 +17,6 @@ cases = [
     } for x in ['НУ Я НА ТОЧКЕ, А ВЫ ГДЕ?','kek, я застрял в текстурах...','ребята, gg, bb!']
 ]
 
-print(test.run('L04_HW_task1', cases, package_name='hw_examples'))
+
+def run(package_name):
+    return test.run('L04_HW_task1', cases, package_name=package_name)

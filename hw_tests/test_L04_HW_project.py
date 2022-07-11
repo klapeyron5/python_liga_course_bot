@@ -31,4 +31,5 @@ cases = [{test.INPUT_stdin: x, test.TEST_FUNC: test_func} for x in [
 ]]
 
 
-print(test.run('L04_HW_project', cases, package_name='hw_examples'))
+def run(package_name):
+    return test.run('L04_HW_project', cases, package_name=package_name)
