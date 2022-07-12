@@ -18,17 +18,17 @@ def test_func(**kwargs):
     stdout = kwargs[test.OUTPUT_stdout]
     rtrn = kwargs[test.OUTPUT_returned]
 
-    # main content of tests
-    assert rtrn is None, f"returned value is not None: {rtrn}"
+    assert rtrn is None
 
     assert stdout[:4] == 'SE: '
     se = int(stdout[4:])
     assert (1+1*stdin[0] - stdin[1])**2 == se
 
+
 cases = [{test.INPUT_stdin: x, test.TEST_FUNC: test_func} for x in [
-        [1, 3],
-        [10, 2],
-    ]]
+    [1, 3],
+    [10, 2],
+]]
 
 
 def run(package_name):
