@@ -78,7 +78,8 @@ def run(module_name, cases, func_name=None, test_module=None, package_name='hw_e
     """
     module_name: имя модуля, который тестируем (имя файла с решением задания)
     func_name: функция, которую тестируем. Если None, значит вся логика выполняется в global scope модуля (подходит для первых ДЗ)
-    cases: кейсы для тестирования func_name или module_name
+    cases: кейсы для тестирования func_name или module_name. Список словарей с ключами INPUT_stdin, INPUT_args, INPUT_kwargs, TEST_FUNC.
+           INPUT-ключи не обязательны, TEST_FUNC - обязателен.
     test_module: функция, которая тестирует модуль целиком (оформление, имена функций, документация, используемые либы и т.д.)
     package_name: имя пакета, в котором лежит решенное задание (hw_examples для примеров верных заданий, tmp - для полученных от бота)
     """
@@ -88,10 +89,6 @@ def run(module_name, cases, func_name=None, test_module=None, package_name='hw_e
     if not _check_task_name_format(module_name):
         raise Exception(f'Wrong format of tested module name: {module_name}')
 
-    # global module
-    # tested_module_name = package + '.' + tested_module_name
-    # if package not in sys.modules:
-    #     tested_module = importlib.import_module(tested_module_name)
     if func_name is None:
         tested_func = lambda: _reimport_module(module_name, package_name)
     else:
