@@ -20,11 +20,11 @@ def test_func(**kwargs):
     # тестируем логику модуля как функцию
     assert stdout[:4] == 'SE: '
     se = int(stdout[4:])
-    assert (1+1*stdin[0] - stdin[1])**2 == se
+    assert (1+1*int(stdin[0]) - int(stdin[1]))**2 == se
 
 
 cases = [{test.INPUT_stdin: x, test.TEST_FUNC: test_func} for x in [
-    [1, 3],
+    ['1', 3],
     [10, 2],
 ]]
 

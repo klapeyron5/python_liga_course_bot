@@ -80,6 +80,7 @@ def run(module_name, cases, func_name=None, test_module=None, package_name='hw_e
     func_name: функция, которую тестируем. Если None, значит вся логика выполняется в global scope модуля (подходит для первых ДЗ)
     cases: кейсы для тестирования func_name или module_name. Список словарей с ключами INPUT_stdin, INPUT_args, INPUT_kwargs, TEST_FUNC.
            INPUT-ключи не обязательны, TEST_FUNC - обязателен.
+           INPUT_stdin может быть как str (если в программе один вызов input()) так и [str] (список строк на вход последовательным запросам input())
     test_module: функция, которая тестирует модуль целиком (оформление, имена функций, документация, используемые либы и т.д.)
     package_name: имя пакета, в котором лежит решенное задание (hw_examples для примеров верных заданий, tmp - для полученных от бота)
     """

@@ -14,10 +14,7 @@ tasks = [
 def f(task):
     m = importlib.import_module('hw_tests.test_'+task)
     res, log = m.run(package)
-    if not res:
-        return res, log
-    else:
-        return res, log
+    return res, log
 
 res = {}
 pool = Pool(len(tasks))

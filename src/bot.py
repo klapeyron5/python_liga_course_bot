@@ -1,10 +1,14 @@
 import logging
+import os.path
+
 from src.utils import get_message, verify_valid, get_user_info_ad, get_full_name, get_code
 from src.db_worker import DB_Worker
 from configparser import ConfigParser
 from telegram.update import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from telegram.ext.callbackcontext import CallbackContext
+import importlib
+from multiprocessing import Pool
 
 
 logging.basicConfig(filename='log.txt',
@@ -36,6 +40,7 @@ class PythonBot:
         self.dispatcher.add_handler(MessageHandler(Filters.document, self.file_handler))
         self.updater.start_polling()
         logging.info('Готов к работе.')
+        self.pool = Pool(1)
 
 
     def file_handler(self, update: Update, context: CallbackContext) -> None:
@@ -43,12 +48,31 @@ class PythonBot:
         fname = update.message['document']['file_name']
         fid = update.message['document']['file_id']
         logging.info(f'Получен файл {fname}; пользователь: {chat_id}')
+        context.bot.send_message(chat_id=chat_id, text=f'Проверяю ДЗ')
 
-        with open(f"./tmp/{fname}", 'wb') as f:
+        package = 'tmp'
+        with open(f"./{package}/{fname}", 'wb') as f:
             context.bot.get_file(update.message.document).download(out=f)
 
+        task = os.path.splitext(fname)[0]
+        # test_module = 'hw_tests.test_' + task
+        tasks = [task,]
+
+        def f(task):
+            m = importlib.import_module(f'{package}.test_' + task)
+            res, log = m.run(package)
+            return res, log
+
+        args = [list((x,)) for x in tasks]
+        out = self.pool.starmap(f, args)[0]
+        res, log = out
+
+        # test_module = 'hw_tests.test_'+os.path.splitext(fname)[0]
+        # testing_module = importlib.import_module(test_module)
+        # res, log = testing_module.run('tmp')
+
         # logging.info(f'Отправка файла; пользователь: {chat_id}')
-        context.bot.send_message(chat_id=chat_id, text='Проверил ДЗ')
+        context.bot.send_message(chat_id=chat_id, text=f'Проверил ДЗ. Результат: {res}. Логи: {log}')
 
 
     def is_registered(self, update: Update, context: CallbackContext) -> bool:
