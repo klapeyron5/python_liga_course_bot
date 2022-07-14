@@ -7,13 +7,17 @@ def test_func(**kwargs):
     rtrn = kwargs[test.OUTPUT_returned]  # здесь возвращается ссылка на модуль L05_HW_task1, т.к. global scope модуля и есть тестируемая программа
 
     # тестируем логику модуля как функцию
-    def divisible_by_x(a: int, b: int):
-        def divisible_by_y(c: int):
-            return stdin[0] % c
+    def task_1(n: str, x: str, y: str):
+        def divisible_by_x(a: int, b: int):
+            def divisible_by_y(c: int):
+                return n % c
 
-        return stdin[0] % a + divisible_by_y(b)
+            return n % a + divisible_by_y(b)
 
-    s = f'total remainder of divisions equals {divisible_by_x(stdin[1], stdin[2])};'
+        n, x, y = int(n), int(x), int(y)
+        return f'total remainder of divisions equals {divisible_by_x(x, y)};'
+
+    s = task_1(stdin[0], stdin[1], stdin[2])
     assert s == stdout.rstrip('\n')
 
 
