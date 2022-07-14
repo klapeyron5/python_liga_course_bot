@@ -10,6 +10,8 @@ tasks = [
     'L04_HW_project',
     'L05_HW_task1',
     'L05_HW_project',
+    'L06_HW_task1',
+    'L06_HW_task2',
 ]
 
 def f(task):

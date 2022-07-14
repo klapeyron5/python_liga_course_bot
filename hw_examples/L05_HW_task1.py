@@ -10,4 +10,5 @@ def task_1(n: str, x: str, y: str):
     y = int(y)
     print('total remainder of divisions equals', divisible_by_x(x, y), end=';')
 
+
 task_1(input(), input(), input())
