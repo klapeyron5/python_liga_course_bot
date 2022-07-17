@@ -23,7 +23,11 @@ res = {}
 pool = Pool(len(tasks))
 
 args = [list((x,)) for x in tasks]
-outs = pool.starmap(f, args)
+# outs = []
+outs = [f(*a) for a in args]
+    # out = f(*a)
+    # outs.append(out)
+# outs = pool.starmap(f, args)
 
 passed = 0
 for task, out in zip(tasks, outs):

@@ -58,11 +58,10 @@ def run_test_cases(func, cases):
 
 def _reimport_module(task_name, package):
     global module
-    task_name = package+'.'+task_name
-    if package not in sys.modules:
-        module = importlib.import_module(task_name)
-    else:
+    if package in sys.modules and hasattr(sys.modules[package], task_name):
         importlib.reload(module)
+    else:
+        module = importlib.import_module(package+'.'+task_name)
     return module
 
 
@@ -109,6 +108,7 @@ def run(module_name, cases, func_name=None, test_module=None, package_name='hw_e
         return out_result, out_log
 
     return out_result, out_log
+
 
 def _check_task_name_format(tn):
     """
