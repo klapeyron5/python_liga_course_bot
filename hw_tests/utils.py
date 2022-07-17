@@ -59,6 +59,7 @@ def run_test_cases(func, cases):
 def _reimport_module(task_name, package):
     global module
     if package in sys.modules and hasattr(sys.modules[package], task_name):
+        module = importlib.import_module(package + '.' + task_name)
         importlib.reload(module)
     else:
         module = importlib.import_module(package+'.'+task_name)
@@ -93,9 +94,9 @@ def run(module_name, cases, func_name=None, test_module=None, package_name='hw_e
         tested_func = lambda: _reimport_module(module_name, package_name)
     else:
         tested_module = _reimport_module(module_name, package_name)
-        tested_func = getattr(tested_module, func_name)
         try:
             test_module(tested_module)
+            tested_func = getattr(tested_module, func_name)
         except:
             out_result = 0
             out_log = "Проблема с оформлением кода (имена функций, документация, использование библиотек)"

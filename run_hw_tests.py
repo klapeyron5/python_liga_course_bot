@@ -1,4 +1,3 @@
-from multiprocessing import Pool
 import importlib
 
 package = 'hw_examples'
@@ -11,7 +10,7 @@ tasks = [
     'L05_HW_task1',
     'L05_HW_project',
     'L06_HW_task1',
-    'L06_HW_task2',
+    # 'L06_HW_task2',
 ]
 
 def f(task):
@@ -20,14 +19,8 @@ def f(task):
     return res, log
 
 res = {}
-pool = Pool(len(tasks))
 
-args = [list((x,)) for x in tasks]
-# outs = []
-outs = [f(*a) for a in args]
-    # out = f(*a)
-    # outs.append(out)
-# outs = pool.starmap(f, args)
+outs = [f(t) for t in tasks]
 
 passed = 0
 for task, out in zip(tasks, outs):

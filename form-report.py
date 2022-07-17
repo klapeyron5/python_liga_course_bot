@@ -35,7 +35,7 @@ def get_args() -> Namespace:
 
 if __name__ == '__main__':
     args = get_args()
-    path_to_config = os.path.join('data', 'config-prod.ini')
+    path_to_config = os.path.join('data', 'config.ini')
     db_worker = DB_Worker(parse_config(path_to_config))
     logging.info(f'Формируем отчет, группа: {str(args.group)}; практика: {str(args.practice)}')
     print('Создаю отчет.\n')

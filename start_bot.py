@@ -34,7 +34,7 @@ def start_bot(config: ConfigParser) -> None:
 if __name__ == '__main__':
     print('====================')
     logging.info('\n\nНачало работы программы.')
-    path_to_config = os.path.join('data', 'config-prod.ini')
+    path_to_config = os.path.join('data', 'config.ini')
     # path_to_config = os.path.join('data', 'config.ini')
     config = parse_config(path_to_config)
     start_bot(config)
