@@ -1,6 +1,6 @@
 import os
 import logging
-import importlib
+from hw_tests.utils import meta_run
 from configparser import ConfigParser
 from aiogram import Bot, Dispatcher, executor, types
 
@@ -24,11 +24,6 @@ def run(config_file):
     bot = Bot(token=bot_conf['token'])
     dp = Dispatcher(bot)
 
-    def f(task):
-        m = importlib.import_module('hw_tests.test_' + task)
-        res, log = m.run('tmp')
-        return res, log
-
     @dp.message_handler(content_types=types.ContentType.DOCUMENT)
     async def file_handler(message: types.Message):
         assert message.content_type == 'document'
@@ -37,7 +32,7 @@ def run(config_file):
         logging.info(f"Записан файл {dest}")
 
         task = os.path.splitext(message.document.file_name)[0]
-        res, log = f(task)
+        res, log = meta_run(task, 'tmp')
         logging.info(f"Протестировано задание {task}. Результат: {res}. Лог: {log}")
 
         await message.answer(f"Протестировано задание {task}. Результат: {res}. Лог: {log}")

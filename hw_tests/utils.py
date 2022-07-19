@@ -48,7 +48,6 @@ def run_test_cases(func, cases):
             case[TEST_FUNC](**{**case, **{OUTPUT_stdout: output_stdout, OUTPUT_returned: output_return}})
             tests_passed.append(i)
         except Exception as e:
-            print(e)
             tests_failed.append(i)
     return {
         'passed': tests_passed,
@@ -67,8 +66,6 @@ def _reimport_module(task_name, package):
 
 
 def get_module_test(module_name, package='hw_examples'):
-    if not _check_task_name_format(module_name):
-        raise Exception(f'Неверный формат имени тестируемого модуля: {module_name}')
     def body():
         return _reimport_module(module_name, package)
     return body
@@ -86,9 +83,6 @@ def run(module_name, cases, func_name=None, test_module=None, package_name='hw_e
     """
     out_result = 1
     out_log = "Тесты пройдены"
-
-    if not _check_task_name_format(module_name):
-        raise Exception(f'Wrong format of tested module name: {module_name}')
 
     if func_name is None:
         tested_func = lambda: _reimport_module(module_name, package_name)
@@ -111,6 +105,16 @@ def run(module_name, cases, func_name=None, test_module=None, package_name='hw_e
     return out_result, out_log
 
 
+def meta_run(task, package='tmp'):
+    try:
+        _check_task_name_format(task)
+        m = importlib.import_module('hw_tests.test_'+task)
+        res, log = m.run(package)
+    except Exception as e:
+        res, log = 0, str(e)
+    return res, log
+
+
 def _check_task_name_format(tn):
     """
     Examples of right formats:
@@ -130,6 +134,5 @@ def _check_task_name_format(tn):
             task_number = 0
         c1 = tn[7:11] == 'task' and task_number >= 1 and len(str(task_number)) == len(tn[11:])
         assert c0 or c1
-        return 1
     except:
-        return 0
+        raise Exception(f'Неверный формат имени тестируемого задания: {tn}')

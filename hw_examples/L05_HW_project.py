@@ -45,5 +45,6 @@ def pipeline():
     x = get_x()
     y_true = get_y()
     y_model = linear_regression(x)
-    err = squared_error(y_true, y_model)
-    print('SE:', 'asdf')
+    se = squared_error(y_true, y_model)
+    # print('SE:', se)
+    print('SE:', 'abs')
