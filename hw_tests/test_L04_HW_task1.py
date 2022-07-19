@@ -19,4 +19,4 @@ cases = [
 
 
 def run(package_name):
-    return test.run('L04_HW_task1', cases, package_name=package_name)
+    return test._run('L04_HW_task1', cases, package_name=package_name)

@@ -1,4 +1,4 @@
-from hw_tests.utils import meta_run
+from hw_tests.utils import run
 
 package = 'hw_examples'
 
@@ -13,7 +13,7 @@ tasks = [
     # 'L06_HW_task2',
 ]
 
-outs = [meta_run(t, package) for t in tasks]
+outs = [run(t, package) for t in tasks]
 
 passed = 0
 for task, out in zip(tasks, outs):

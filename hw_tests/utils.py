@@ -71,7 +71,7 @@ def get_module_test(module_name, package='hw_examples'):
     return body
 
 
-def run(module_name, cases, func_name=None, test_module=None, package_name='hw_examples'):
+def _run(module_name, cases, func_name=None, test_module=None, package_name='hw_examples'):
     """
     module_name: имя модуля, который тестируем (имя файла с решением задания)
     func_name: функция, которую тестируем. Если None, значит вся логика выполняется в global scope модуля (подходит для первых ДЗ)
@@ -105,7 +105,7 @@ def run(module_name, cases, func_name=None, test_module=None, package_name='hw_e
     return out_result, out_log
 
 
-def meta_run(task, package='tmp'):
+def run(task, package='tmp'):
     try:
         _check_task_name_format(task)
         m = importlib.import_module('hw_tests.test_'+task)

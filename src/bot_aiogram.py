@@ -1,6 +1,6 @@
 import os
 import logging
-from hw_tests.utils import meta_run
+from hw_tests.utils import run
 from configparser import ConfigParser
 from aiogram import Bot, Dispatcher, executor, types
 
@@ -32,7 +32,7 @@ def run(config_file):
         logging.info(f"Записан файл {dest}")
 
         task = os.path.splitext(message.document.file_name)[0]
-        res, log = meta_run(task, 'tmp')
+        res, log = run(task, 'tmp')
         logging.info(f"Протестировано задание {task}. Результат: {res}. Лог: {log}")
 
         await message.answer(f"Протестировано задание {task}. Результат: {res}. Лог: {log}")

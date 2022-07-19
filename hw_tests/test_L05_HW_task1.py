@@ -28,4 +28,4 @@ cases = [{test.INPUT_stdin: x, test.TEST_FUNC: test_func} for x in [
 
 
 def run(package_name):
-    return test.run('L05_HW_task1', cases, package_name=package_name)
+    return test._run('L05_HW_task1', cases, package_name=package_name)
