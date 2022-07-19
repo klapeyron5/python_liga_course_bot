@@ -8,9 +8,9 @@ tasks = [
     'L04_HW_task3',
     'L04_HW_project',
     'L05_HW_task1',
-    'L05_HW_project_',
+    'L05_HW_project',
     'L06_HW_task1',
-    # 'L06_HW_task2',
+    'L06_HW_task2',
 ]
 
 outs = [run(t, package) for t in tasks]
