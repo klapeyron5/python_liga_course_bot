@@ -23,7 +23,7 @@ def migrate_assignments_to_db(config: ConfigParser) -> None:
 
 
 def start_bot(config: ConfigParser) -> None:
-    # db_worker = DB_Worker(config)
+    db_worker = DB_Worker(config)
     sql_bot = PythonBot(config, db_worker=None)
     # sql_bot = SQL_Bot(config, db_worker=None)
     sql_bot.run()

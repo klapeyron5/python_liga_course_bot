@@ -1,6 +1,7 @@
 import os
 import logging
-from hw_tests.utils import run
+from src.utils import get_message
+from hw_tests.utils import run as run_tests
 from configparser import ConfigParser
 from aiogram import Bot, Dispatcher, executor, types
 
@@ -21,20 +22,34 @@ def run(config_file):
     config = parse_config(config_file=config_file)
     bot_conf = config._sections['bot']
     logging.info('Bot initializing')
-    bot = Bot(token=bot_conf['token'])
-    dp = Dispatcher(bot)
 
-    @dp.message_handler(content_types=types.ContentType.DOCUMENT)
-    async def file_handler(message: types.Message):
+    pb = PythonBot(bot_conf)
+    pb.run()
+
+
+class PythonBot:
+    def __init__(self, bot_conf: dict):
+        self.bot = Bot(token=bot_conf['token'])
+        self.dp = Dispatcher(self.bot)
+
+    def run(self) -> None:
+        self.dp.register_message_handler(self.file_handler, content_types=types.ContentType.DOCUMENT)
+        self.dp.register_message_handler(self.start, commands=['start', 'help'])
+        executor.start_polling(self.dp, skip_updates=True)
+
+    async def file_handler(self, message: types.Message):
         assert message.content_type == 'document'
         dest = os.path.join('./tmp', message.document.file_name)
         await message.document.download(destination_file=dest)
         logging.info(f"Записан файл {dest}")
 
         task = os.path.splitext(message.document.file_name)[0]
-        res, log = run(task, 'tmp')
+        res, log = run_tests(task, 'tmp')
         logging.info(f"Протестировано задание {task}. Результат: {res}. Лог: {log}")
 
         await message.answer(f"Протестировано задание {task}. Результат: {res}. Лог: {log}")
 
-    executor.start_polling(dp, skip_updates=True)
+    async def start(self, message: types.Message) -> None:
+        user_id = message.from_user.id
+        msg = get_message('welcome') + '\n\n'
+        await message.reply(msg)

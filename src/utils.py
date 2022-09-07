@@ -3,12 +3,12 @@ import logging
 import platform
 from configparser import ConfigParser
 from typing import List, Dict
-from ldap3 import Server, Connection, ALL, ALL_ATTRIBUTES
+# from ldap3 import Server, Connection, ALL, ALL_ATTRIBUTES
 
 
-logging.basicConfig(filename='log.txt',
-                    level=logging.INFO,
-                    format='%(asctime)s:%(levelname)s:%(message)s')
+# logging.basicConfig(filename='log.txt',
+#                     level=logging.INFO,
+#                     format='%(asctime)s:%(levelname)s:%(message)s')
 
 
 def parse_config(config_file: str) -> ConfigParser:
