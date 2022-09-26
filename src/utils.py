@@ -3,7 +3,7 @@ import logging
 import platform
 from configparser import ConfigParser
 from typing import List, Dict
-# from ldap3 import Server, Connection, ALL, ALL_ATTRIBUTES
+from ldap3 import Server, Connection, ALL, ALL_ATTRIBUTES
 
 
 # logging.basicConfig(filename='log.txt',

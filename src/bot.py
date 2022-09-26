@@ -173,33 +173,33 @@ class PythonBot:
     def verify(self, update: Update, context: CallbackContext) -> None:
         chat_id = update.effective_chat.id
         logging.info(f'Обращение к команде verify; пользователь: {chat_id}')
-        # if not self.is_registered(update, context):
-        #     return
-        print('verify0')
-        print(update.message)
-        try:
-            context.bot.get_file(update.message.document).download()
-            with open("file.doc", 'wb') as f:
-                context.bot.get_file(update.message.document).download(out=f)
-            print('FILE')
-        except Exception as e:
-            print(str(e))
-        print('verify1')
-        # split = update.message.text.split(' ')
-        # test, task = split[1].split('-')
-        # answer = (' ').join(split[2:])
-        # if self.db_worker.is_completed(chat_id, test, task):
-        #     message = f'Вы уже выполнили задачу №{task} Практики №{test}.'
-        # else:
-        #     correct = self.db_worker.get_correct(test, task)
-        #     result = self.db_worker.check_answer(answer, correct)
-        #     if result['mark']:
-        #         message = f'Ответ на задачу {test}-{task} верный!'
-        #         self.db_worker.add_student_progress(chat_id, test, task)
-        #     elif 'ORA' in result['status']:
-        #         message = f"Неверный запрос. Ошибка {result['status']}"
-        #     else:
-        #         message = f'Ответ неверный.'
+        if not self.is_registered(update, context):
+            return
+        # print('verify0')
+        # print(update.message)
+        # try:
+        #     context.bot.get_file(update.message.document).download()
+        #     with open("file.doc", 'wb') as f:
+        #         context.bot.get_file(update.message.document).download(out=f)
+        #     print('FILE')
+        # except Exception as e:
+        #     print(str(e))
+        # print('verify1')
+        split = update.message.text.split(' ')
+        test, task = split[1].split('-')
+        answer = (' ').join(split[2:])
+        if self.db_worker.is_completed(chat_id, test, task):
+            message = f'Вы уже выполнили задачу №{task} Практики №{test}.'
+        else:
+            correct = self.db_worker.get_correct(test, task)
+            result = self.db_worker.check_answer(answer, correct)
+            if result['mark']:
+                message = f'Ответ на задачу {test}-{task} верный!'
+                self.db_worker.add_student_progress(chat_id, test, task)
+            elif 'ORA' in result['status']:
+                message = f"Неверный запрос. Ошибка {result['status']}"
+            else:
+                message = f'Ответ неверный.'
         context.bot.send_message(chat_id=chat_id, text='verify_message')
 
 

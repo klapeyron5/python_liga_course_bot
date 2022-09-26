@@ -1,3 +1,4 @@
+from sys import exit
 import logging
 import cx_Oracle
 from configparser import ConfigParser
@@ -39,7 +40,7 @@ class DB_Worker:
 
 
     def select_user_info(self, chat_id: int) -> Tuple:
-        query = 'SELECT * FROM SQL_BOT_USERS WHERE chat_id = ' + str(chat_id)
+        query = 'SELECT * FROM PYTHON_BOT_USERS WHERE chat_id = ' + str(chat_id)
         return self.query_select(query)['data']
 
 
@@ -74,7 +75,7 @@ class DB_Worker:
     def query_insert(self, query: str) -> Dict[str, str]:
         # закидывает данные в базу
         logging.info(f'Обращение к базе (INSERT): {query}')
-        result = {'status': '', 'data': ''}
+        result = {'status': '', 'data': '', 'log': ''}
         con = self.connect_to_db()
         cur = con.cursor()
         try:
@@ -82,51 +83,49 @@ class DB_Worker:
             con.commit()
             result['status'] = 'success'
         except Exception as e:
-            logging.warning(str(e))
+            result['log'] = str(e)
         return result
 
 
     def register_user(self, chat_id: str, ad_login: str, username: str) -> Dict[str, str]:
-        # инсертит в базу значения
         logging.info(f"Регистрируем пользователя {username}, chat_id: {chat_id}")
-        query = f"""INSERT INTO SQL_BOT_USERS (NAME, GROUP_ID, CHAT_ID, LOGIN)
+        query = f"""INSERT INTO PYTHON_BOT_USERS (NAME, GROUP_ID, CHAT_ID, LOGIN)
         VALUES ('{username}', '', '{chat_id}', '{ad_login}')"""
         return self.query_insert(query)
 
 
     def set_group_id(self, chat_id: str, group_id: int) -> Dict[str, str]:
-        result = False
-        query =  f"""UPDATE SQL_BOT_USERS SET group_id = {group_id} WHERE chat_id = '{chat_id}'"""
+        query = f"""UPDATE PYTHON_BOT_USERS SET group_id = {group_id} WHERE chat_id = '{chat_id}'"""
         return self.query_insert(query)
 
 
-    def is_completed(self, chat_id: str, test: str, task: str) -> bool:
-        query = f"""SELECT * FROM SQL_BOT_PROGRESS WHERE test = {int(test)} AND task = {int(task)} AND chat_id = {int(chat_id)}"""
+    def is_completed(self, chat_id: str, task: str) -> bool:
+        query = f"""SELECT * FROM PYTHON_BOT_PROGRESS WHERE task = {task} AND chat_id = {int(chat_id)}"""
         return bool(self.query_select(query)['data'])
 
 
     def get_question(self, test: str, task: str) -> Tuple:
-        query = f"""SELECT question FROM SQL_BOT_ASSIGNMENTS WHERE test = {int(test)} AND task = {int(task)}"""
+        query = f"""SELECT question FROM PYTHON_BOT_ASSIGNMENTS WHERE test = {int(test)} AND task = {int(task)}"""
         return self.query_select(query)['data'][0][0]
 
 
     def get_correct(self, test: str, task: str) -> Tuple:
-        query = f"""SELECT answer FROM SQL_BOT_ASSIGNMENTS WHERE test = {int(test)} AND task = {int(task)}"""
+        query = f"""SELECT answer FROM PYTHON_BOT_ASSIGNMENTS WHERE test = {int(test)} AND task = {int(task)}"""
         return self.query_select(query)['data'][0][0]
 
 
-    def get_tasks(self, chat_id: str, test: str) -> Tuple:
-        query = f"SELECT task FROM SQL_BOT_PROGRESS WHERE chat_id = '{chat_id}' AND test = {test}"
+    def get_user_tasks(self, chat_id: str) -> Tuple:
+        query = f"SELECT task FROM PYTHON_BOT_PROGRESS WHERE chat_id = '{chat_id}'"
         return self.query_select(query)['data']
 
 
-    def get_questions(self, test: str) -> Tuple:
-        query = f"""SELECT question FROM SQL_BOT_ASSIGNMENTS WHERE test = {int(test)}"""
-        return self.query_select(query)['data']
+    # def get_questions(self, test: str) -> Tuple:
+    #     query = f"""SELECT question FROM PYTHON_BOT_ASSIGNMENTS WHERE test = {int(test)}"""
+    #     return self.query_select(query)['data']
 
 
-    def get_tests(self) -> Tuple:
-        query = f"""SELECT test FROM SQL_BOT_ASSIGNMENTS"""
+    def get_all_tasks(self) -> Tuple:
+        query = f"""SELECT task FROM PYTHON_BOT_ASSIGNMENTS"""
         return self.query_select(query)['data']
 
 
@@ -144,11 +143,11 @@ class DB_Worker:
         return result
 
 
-    def add_student_progress(self, chat_id: str, test: str, task: str) -> Dict[str, str]:
+    def add_student_progress(self, chat_id: str, task: str) -> Dict[str, str]:
         name = self.get_name(chat_id)
         group_id = self.get_group_id(chat_id)
         query = f"""
-        INSERT INTO SQL_BOT_PROGRESS (name, group_id, chat_id, test, task)
-        VALUES ('{name}', {group_id}, {chat_id}, {test}, {task})
+        INSERT INTO PYTHON_BOT_PROGRESS (name, group_id, chat_id, task)
+        VALUES ('{name}', {group_id}, '{chat_id}', '{task}')
         """
         return self.query_insert(query)
