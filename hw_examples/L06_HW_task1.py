@@ -1,4 +1,4 @@
-def task_1(x: str, y: str, z: str):
+def main(x: str, y: str, z: str):
     x = int(x)
     y = int(y)
     z = int(z)
@@ -11,6 +11,3 @@ def task_1(x: str, y: str, z: str):
             print('nothing', end='...')
     else:
         print('nothing', end='...')
-
-
-task_1(input(), input(), input())

@@ -81,11 +81,9 @@ class PythonBot:
             os.makedirs(dir_path)
         dest = os.path.join(dir_path, message.document.file_name)
         await message.document.download(destination_file=dest)
-        # logging.info(f"Записан файл {dest}")
 
         task = os.path.splitext(message.document.file_name)[0]
         res, log = run_tests(task, dir_path.replace(os.sep, '.'))
-        # logging.info(f"Протестировано задание {task}. Результат: {res}. Лог: {log}")
 
         if self.db_worker.is_completed(chat_id, task):
             await message.answer(f'Вы уже выполнили задачу {task}. Результаты проверки присланного варианта: {res}. Лог: {log}')
@@ -108,20 +106,17 @@ class PythonBot:
         if not user_input:
             txt = 'Вы не указали логин. Попробуйте снова.'
         elif not self.db_worker.user_exists(chat_id):
-            # try:
-                split = user_input.split(' ')
-                ad_login = split[0]
-                ad_fio = ' '.join(split[1:])
-                assert len(ad_fio) > 0, 'Укажите ФИО'
-                # code = get_code(user_input)
-                # result = verify_valid(ad_login, code)
-                # if result['status']:
-                # self.db_worker.register_user(chat_id, ad_login, result['full_name'])
-                self.db_worker.register_user(chat_id, ad_login, ad_fio)
-                # txt = result['message']
-                txt = f"Зарегистрирован пользователь логин: {ad_login}, ФИО: {ad_fio}"
-            # except Exception as e:
-            #     txt = 'Error: '+str(e)
+            split = user_input.split(' ')
+            ad_login = split[0]
+            ad_fio = ' '.join(split[1:])
+            assert len(ad_fio) > 0, 'Укажите ФИО'
+            # code = get_code(user_input)
+            # result = verify_valid(ad_login, code)
+            # if result['status']:
+            # self.db_worker.register_user(chat_id, ad_login, result['full_name'])
+            self.db_worker.register_user(chat_id, ad_login, ad_fio)
+            # txt = result['message']
+            txt = f"Зарегистрирован пользователь логин: {ad_login}, ФИО: {ad_fio}"
         else:
             txt = 'Вы уже зарегистрированы'
         await message.reply(txt)

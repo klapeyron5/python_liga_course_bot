@@ -11,6 +11,8 @@ def test_module(module):
     assert excess_funcs == set(), excess_funcs
     for f in funcs:
         assert re.search('[a-zA-Zа-яА-Я]', f.__doc__) is not None
+    assert module.DEFAULT_b0 == 1
+    assert module.DEFAULT_b1 == 1
 
 
 def test_func(**kwargs):
