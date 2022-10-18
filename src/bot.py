@@ -55,7 +55,7 @@ class PythonBot:
             context.bot.get_file(update.message.document).download(out=f)
 
         task = os.path.splitext(fname)[0]
-        # test_module = 'hw_tests.test_' + task
+        # test_module = 'hw_tests_prod.test_' + task
         tasks = [task,]
 
         def f(task):
@@ -67,7 +67,7 @@ class PythonBot:
         out = self.pool.starmap(f, args)[0]
         res, log = out
 
-        # test_module = 'hw_tests.test_'+os.path.splitext(fname)[0]
+        # test_module = 'hw_tests_prod.test_'+os.path.splitext(fname)[0]
         # testing_module = importlib.import_module(test_module)
         # res, log = testing_module.run('tmp')
 

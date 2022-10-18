@@ -5,7 +5,7 @@ import pandas as pd
 
 from src.utils import get_message, get_code, get_full_name, verify_valid
 from src.db_worker import DB_Worker
-from hw_tests.utils import run as run_tests
+from hw_tests_prod.utils import run as run_tests, _check_task_name_format
 from configparser import ConfigParser
 from aiogram import Bot, Dispatcher, executor, types
 
@@ -32,6 +32,23 @@ def parse_config(config_file: str) -> ConfigParser:
     return config
 
 
+def check_assignments(dbw):
+    tests = os.listdir(os.path.join(os.path.dirname(__file__), '../', 'hw_tests_prod'))
+    tests_names = []
+    for t in tests:
+        if t[:5] == 'test_':
+            tname, ext = os.path.splitext(t[5:])
+            assert ext == '.py'
+            try:
+                _check_task_name_format(tname)
+                tests_names.append(tname)
+            except Exception:
+                pass
+    with dbw.connect_to_db() as c:
+        df = pd.read_sql('select TASK from PYTHON_BOT_ASSIGNMENTS', c)
+    assert set(tests_names) == set(df.TASK.values)
+
+
 def run(config_file):
     with open('log.txt', 'w') as f:
         pass
@@ -42,6 +59,7 @@ def run(config_file):
 
     config = parse_config(config_file=config_file)
     db_worker = DB_Worker(config)
+    check_assignments(db_worker)
     bot_conf = config._sections['bot']
     logging.info('Bot initializing')
 
@@ -89,9 +107,10 @@ class PythonBot:
             await message.answer(f'Вы уже выполнили задачу {task}. Результаты проверки присланного варианта: {res}. Лог: {log}')
         else:
             await message.answer(f"Протестировано задание {task}. Результат: {res}. Лог: {log}")
-            insert_res = self.db_worker.add_student_progress(chat_id, task=task)
-            if not insert_res['status']:
-                await message.answer(insert_res['log'])
+            if res == 1:
+                insert_res = self.db_worker.add_student_progress(chat_id, task=task)
+                if not insert_res['status']:
+                    await message.answer(insert_res['log'])
 
     async def start(self, message: types.Message) -> None:
         # chat_id = message.from_user.id
