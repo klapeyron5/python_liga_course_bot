@@ -21,13 +21,23 @@ def parse_config(config_file: str) -> ConfigParser:
     config.read(config_file, encoding='utf-8')
     return config
 config = parse_config(config_file=config_file)
-dbw = DB_Worker(config)
+# dbw = DB_Worker(config)
 
 package = 'hw_examples'
 
-with dbw.connect_to_db() as c:
-    df = pd.read_sql('select TASK from PYTHON_BOT_ASSIGNMENTS', c)
-tasks = df.TASK.values
+# with dbw.connect_to_db() as c:
+#     df = pd.read_sql('select TASK from PYTHON_BOT_ASSIGNMENTS', c)
+# tasks = df.TASK.values
+tasks = [
+    'L04_HW_project', 
+    'L04_HW_task1', 
+    'L04_HW_task2', 
+    'L04_HW_task3', 
+    'L05_HW_project', 
+    'L06_HW_project', 
+    'L06_HW_task1', 
+    'L06_HW_task2',
+]
 
 outs = [run(t, package) for t in tasks]
 
