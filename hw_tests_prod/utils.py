@@ -41,7 +41,10 @@ def run_test_cases(func, cases):
 
         # кладем в переменную output то, что выводится программкой в stdout
         with mock.patch('sys.stdout', new=io.StringIO()) as output:
-            output_return = func(*case[INPUT_args], **case[INPUT_kwargs])
+            try:
+                output_return = func(*case[INPUT_args], **case[INPUT_kwargs])
+            except Exception as e:
+                output_return = e
         output_stdout = output.getvalue()
         try:
             # testing outputs here

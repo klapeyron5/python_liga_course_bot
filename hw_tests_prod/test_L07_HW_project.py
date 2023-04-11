@@ -48,18 +48,30 @@ def test_func(**kwargs):
     rtrn = kwargs[test.OUTPUT_returned]
 
     assert stdin is None
-    assert rtrn is None
 
-    so_se, so_ez, res = stdout.split('\n')
-    assert res == ''
+    if rtrn is None:
+        so_se, so_ez, res = stdout.split('\n')
+        assert res == ''
 
-    assert so_se[:4] == 'SE: '
-    se = float(so_se[4:])
-    e = 1+1*float(args[0]) - float(args[1])
-    assert e**2 == se
+        assert so_se[:4] == 'SE: '
+        se = float(so_se[4:])
+        
+        a0 = float(args[0])
+        a1 = float(args[1])
+        e = 1+1*a0 - a1
+        assert e**2 == se
 
-    assert so_ez[:12] == 'Error zone: '
-    assert L07_HW_project.calculate_zone(e) == so_ez[12:]
+        assert so_ez[:12] == 'Error zone: '
+        assert L07_HW_project.calculate_zone(e) == so_ez[12:]
+    elif isinstance(rtrn, ValueError):
+        try:
+            a0 = float(args[0])
+            a1 = float(args[1])
+            raise Exception
+        except ValueError as e:
+            assert isinstance(rtrn,ValueError)
+    else:
+        raise Exception
 
 
 cases = [{test.INPUT_args: x, test.TEST_FUNC: test_func} for x in [
@@ -68,6 +80,7 @@ cases = [{test.INPUT_args: x, test.TEST_FUNC: test_func} for x in [
     [1, 3],
     [0, 0],
     [10, '2'],
+    [10, '2asd'],
 ]]
 
 
