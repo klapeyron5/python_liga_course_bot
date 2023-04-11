@@ -29,14 +29,15 @@ package = 'hw_examples'
 #     df = pd.read_sql('select TASK from PYTHON_BOT_ASSIGNMENTS', c)
 # tasks = df.TASK.values
 tasks = [
-    'L04_HW_project', 
-    'L04_HW_task1', 
-    'L04_HW_task2', 
-    'L04_HW_task3', 
-    'L05_HW_project', 
-    'L06_HW_project', 
+    'L04_HW_project',
+    'L04_HW_task1',
+    'L04_HW_task2',
+    'L04_HW_task3',
+    'L05_HW_project',
+    'L06_HW_project',
     'L06_HW_task1', 
     'L06_HW_task2',
+    'L07_HW_project',
 ]
 
 outs = [run(t, package) for t in tasks]
