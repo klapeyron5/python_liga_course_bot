@@ -58,13 +58,19 @@ def run_test_cases(func, cases):
     }
 
 
-def _reimport_module(task_name, package):
+def _reimport_module(module_name, package):
     global module
-    if package in sys.modules and hasattr(sys.modules[package], task_name):
-        module = importlib.import_module(package + '.' + task_name)
-        importlib.reload(module)
+    if package in sys.modules and hasattr(sys.modules[package], module_name):
+        # try:
+        old_m = sys.modules[package+'.'+module_name]
+        del sys.modules[package+'.'+module_name]
+        try:
+            module = importlib.import_module(package + '.' + module_name)
+            # importlib.reload(module)
+        finally:
+            sys.modules[package+'.'+module_name] = old_m
     else:
-        module = importlib.import_module(package+'.'+task_name)
+        module = importlib.import_module(package+'.'+module_name)
     return module
 
 
@@ -97,8 +103,9 @@ def _run(module_name, cases, func_name=None, test_module=None, package_name='hw_
             tested_func = getattr(tested_module, func_name)
         except Exception as e:
             out_result = 0
-            out_log = f"Проблема с оформлением кода (имена функций, документация,\
-                  использование библиотек). Либо функции, отличные от главной '{func_name}', работают некорректно."
+            out_log = f'''\
+Проблема с оформлением кода (имена функций, документация, использование библиотек).
+Либо функции, отличные от главной '{func_name}', работают некорректно.'''
             return out_result, out_log
 
     results = run_test_cases(tested_func, cases=cases)

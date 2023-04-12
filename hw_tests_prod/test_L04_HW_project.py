@@ -39,6 +39,7 @@ cases = [{test.INPUT_stdin: x, test.TEST_FUNC: test_func} for x in [
     ['1', 3],
     [10, 2],
     ['asd',3],
+    [3,3],
 ]]
 
 

@@ -1,5 +1,6 @@
 DEFAULT_b0 = 1
 DEFAULT_b1 = 1
+MU = 0
 SIGMA = 1
 
 def get_float(x):
@@ -12,8 +13,7 @@ class LinearRegression:
     """
     Линейная функция
     """
-    def __init__(self, \
-                 b0=DEFAULT_b0, b1=DEFAULT_b1):
+    def __init__(self, b0=DEFAULT_b0, b1=DEFAULT_b1):
         """
         Инициализация параметров линейной регрессии
         """
@@ -41,16 +41,16 @@ def squared_error(y0, y1):
     err = error(y0, y1)**2
     return err
 
-def calculate_zone(err, sigma=SIGMA):
+def calculate_zone(err, sigma=SIGMA, mu=MU):
     """
     Вычисляет зону, в которой находится отклонение.
     Если отклонение находится в критической зоне, возвращает "red".
     Также может вернуть "orange" или "green".
     """
     abs_err = abs(err)
-    if abs_err < 2*sigma:
+    if mu-2*sigma <= abs_err <= mu+2*sigma:
         return 'green'
-    elif 2*sigma <= abs_err < 3*sigma:
+    elif (mu-3*sigma <= abs_err < mu-2*sigma) or (mu+2*sigma < abs_err <= mu+3*sigma):
         return 'orange'
     else:
         return 'red'
@@ -73,4 +73,4 @@ def pipeline(x, y_true):
     err = error(y_true, y_model)
     zone_color = calculate_zone(err)
     print('Error zone:', zone_color)
-    
+        

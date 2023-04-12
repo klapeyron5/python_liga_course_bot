@@ -26,7 +26,7 @@ def test_module(module):
     all_vars_names = [x[0] for x in all_vars]
     excess_vars = set(all_vars_names) ^ {
         'get_float', 'error', 'squared_error', 'pipeline', 'calculate_zone', \
-            'LinearRegression', 'DEFAULT_b0', 'DEFAULT_b1', 'SIGMA'}
+            'LinearRegression', 'DEFAULT_b0', 'DEFAULT_b1', 'SIGMA', 'MU'}
     assert excess_vars == set()
     
     funcs = inspect.getmembers(module, inspect.isfunction)
@@ -39,6 +39,7 @@ def test_module(module):
     assert module.DEFAULT_b0 == 1
     assert module.DEFAULT_b1 == 1
     assert module.SIGMA == 1
+    assert module.MU == 0
 
 
 def test_func(**kwargs):
@@ -81,6 +82,7 @@ cases = [{test.INPUT_args: x, test.TEST_FUNC: test_func} for x in [
     [0, 0],
     [10, '2'],
     [10, '2asd'],
+    [10, 20],
 ]]
 
 
