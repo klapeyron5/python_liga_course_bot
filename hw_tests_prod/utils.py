@@ -106,7 +106,7 @@ def _run(module_name, cases, func_name=None, test_module=None, package_name='hw_
         out_result = 0
         out_log = f"Провалено {len(results['failed'])} тестов из {len(results['passed'])+len(results['failed'])}"
         return out_result, out_log
-
+    
     return out_result, out_log
 
 

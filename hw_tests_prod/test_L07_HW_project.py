@@ -46,7 +46,7 @@ def test_func(**kwargs):
     args = kwargs[test.INPUT_args]
     stdout = kwargs[test.OUTPUT_stdout]
     rtrn = kwargs[test.OUTPUT_returned]
-
+    
     assert stdin is None
 
     if rtrn is None:
