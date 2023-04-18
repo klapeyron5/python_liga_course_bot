@@ -105,7 +105,8 @@ def _run(module_name, cases, func_name=None, test_module=None, package_name='hw_
             out_result = 0
             out_log = f'''\
 Проблема с оформлением кода (имена функций, документация, использование библиотек).
-Либо функции, отличные от главной '{func_name}', работают некорректно.'''
+Либо функции, отличные от главной '{func_name}', работают некорректно.
+{str(e)}'''
             return out_result, out_log
 
     results = run_test_cases(tested_func, cases=cases)

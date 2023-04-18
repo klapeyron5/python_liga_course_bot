@@ -1,5 +1,8 @@
 from random import normalvariate
 
+class ZeroDataException(Exception):
+    pass
+
 def get_float(x):
     """
     Преобразовывает x к типу float и возвращает его.
@@ -44,10 +47,13 @@ class MLModel:
     """
     Базовый класс ML-моделей.
     """
-    def fit(self):
+    def fit(self, X, Y):
         """
         Обучает модель.
         """
+        assert len(X)==len(Y), "Длина X должна быть равна длине Y"
+        if len(X)==0:
+            raise ZeroDataException
     def predict(self, x):
         """
         Возвращает прогноз модели на x.
@@ -69,7 +75,7 @@ class LinearRegression(MLModel):
         self.b1 = get_float(b1)
     
     def fit(self):
-        super().fit()
+        super().fit([0],[0])
         self.b0 = get_float(1)
         self.b1 = get_float(1)
         self.trn_err_mu = get_float(0)

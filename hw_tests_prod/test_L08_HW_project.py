@@ -18,16 +18,21 @@ def test_module(module):
     assert hasattr(MLModel, 'fit')
     assert hasattr(MLModel, 'predict')
 
-    assert isinstance(LinearRegression.evaluate, types.FunctionType)
-
-    init_code = inspect.getsource(LinearRegression.__init__)
-    init_definition = init_code[:init_code.find(':')].replace('\n','').replace('\\','').replace(' ','')
+    code_init = inspect.getsource(LinearRegression.__init__)
+    init_definition = code_init[:code_init.find(':')].replace('\n','').replace('\\','').replace(' ','')
     assert init_definition.startswith('def__init__(')
     assert init_definition.endswith(')')
     init_definition = init_definition[len('def__init__('):-1]
     init_kwargs = init_definition.split(',')
-    assert 'b0=None' in init_kwargs
-    assert 'b1=None' in init_kwargs
+    assert 'b0=None' in init_kwargs, f"b0 в методе __init__ не равен None по умолчанию"
+    assert 'b1=None' in init_kwargs, f"b1 в методе __init__ не равен None по умолчанию"
+
+    code_fit = inspect.getsource(LinearRegression.fit)
+    assert "super().fit()" in code_fit, f"В LinearRegression.fit не вызван родительский метод через super."
+    
+    code_predict = inspect.getsource(LinearRegression.predict)
+    assert "super().predict(" in code_predict, f"В LinearRegression.predict не вызван родительский метод через super."
+
     methods = inspect.getmembers(LinearRegression, inspect.ismethod)
     lr = LinearRegression(3,-4)
     assert isinstance(lr, MLModel)
@@ -36,6 +41,7 @@ def test_module(module):
     lr.fit()
     assert lr.predict(2) == 3
     assert lr.predict(0) == 1
+    assert isinstance(lr.evaluate, types.FunctionType), f"LinearRegression.evaluate не статический"
     assert lr.evaluate(3,5) == 4
 
     lr = LinearRegression()

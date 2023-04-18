@@ -1,22 +1,37 @@
 from hw_tests_prod import utils as test
-from hw_examples import L09_HW_project
+from hw_examples import L10_HW_project
 import inspect, types
 import re, numpy as np
 
 
 def test_module(module):
     classes = inspect.getmembers(module, inspect.isclass)
-    assert len(classes)==2
+    assert len(classes)==3
     classes_names = [x[0] for x in classes]
     classes_ids = np.argsort(classes_names)
 
     assert classes_names[classes_ids[0]] == 'LinearRegression'
     assert classes_names[classes_ids[1]] == 'MLModel'
+    assert classes_names[classes_ids[2]] == 'ZeroDataException'
 
     LinearRegression = classes[0][1]
     MLModel = classes[1][1]
+    ZeroDataException = classes[2][1]
+
     assert hasattr(MLModel, 'fit')
     assert hasattr(MLModel, 'predict')
+    ml = MLModel()
+    ml.fit([1,2],[0,0])
+    try:
+        ml.fit([1,2],[0,0,2])
+        raise Exception('MLModel.fit некорректно работает при len(X)!=len(Y)')
+    except Exception as e:
+        assert str(e) == 'Длина X должна быть равна длине Y'
+    try:
+        ml.fit([],[])
+        raise Exception('MLModel.fit некорректно работает при len(X)==0')
+    except ZeroDataException as e:
+        pass
 
     init_code = inspect.getsource(LinearRegression.__init__)
     init_definition = init_code[:init_code.find(':')].replace('\n','').replace('\\','').replace(' ','')
@@ -29,7 +44,7 @@ def test_module(module):
     assert 'b1=None' in init_kwargs, f"b1 в методе __init__ не равен None по умолчанию"
 
     code_fit = inspect.getsource(LinearRegression.fit)
-    assert "super().fit()" in code_fit, f"В LinearRegression.fit не вызван родительский метод через super."
+    assert "super().fit(" in code_fit, f"В LinearRegression.fit не вызван родительский метод через super."
     
     code_predict = inspect.getsource(LinearRegression.predict)
     assert "super().predict(" in code_predict, f"В LinearRegression.predict не вызван родительский метод через super."
@@ -55,7 +70,7 @@ def test_module(module):
     all_vars_names = [x[0] for x in all_vars]
     excess_vars = set(all_vars_names) ^ {
         'normalvariate', 'get_float', 'init_weight', 'error', 'squared_error', 'pipeline', 'calculate_zone', \
-            'MLModel', 'LinearRegression',}
+            'MLModel', 'LinearRegression', 'ZeroDataException',}
     assert excess_vars == set()
     
     funcs = inspect.getmembers(module, inspect.isfunction)
@@ -88,7 +103,7 @@ def test_func(**kwargs):
         assert e**2 == se
 
         assert so_ez[:12] == 'Error zone: '
-        assert L09_HW_project.calculate_zone(e, sigma=1, mu=0) == so_ez[12:]
+        assert L10_HW_project.calculate_zone(e, sigma=1, mu=0) == so_ez[12:]
     elif isinstance(rtrn, ValueError):
         try:
             a0 = float(args[0])
@@ -112,4 +127,4 @@ cases = [{test.INPUT_args: x, test.TEST_FUNC: test_func} for x in [
 
 
 def run(package_name):
-    return test._run('L09_HW_project', cases, func_name='pipeline', test_module=test_module, package_name=package_name)
+    return test._run('L10_HW_project', cases, func_name='pipeline', test_module=test_module, package_name=package_name)

@@ -69,6 +69,7 @@ class LinearRegression(MLModel):
         self.b1 = get_float(b1)
     
     def fit(self):
+        super().fit()
         self.b0 = get_float(1)
         self.b1 = get_float(1)
         self.trn_err_mu = get_float(0)
@@ -78,6 +79,7 @@ class LinearRegression(MLModel):
         """
         Возвращает значение линейной функции на объекте x.
         """
+        super().predict(x)
         y = self.b0 + self.b1*x
         return y
     
