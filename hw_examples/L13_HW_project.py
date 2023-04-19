@@ -65,6 +65,24 @@ class MLModel:
         """
         Возвращает прогноз модели на x.
         """
+    def get_params(self):
+        """
+        Возвращает параметры модели списком, в порядке как в аргументах __init__.
+        """
+    
+    def save(self, file):
+        """
+        Сохраняет параметры модели в файл.
+        """
+        to_save = ','.join([str(round(float(x),4)) for x in self.get_params()])
+        return to_save
+    
+    @classmethod
+    def load(cls, file):
+        """
+        Загружает параметры модели из файла, инициализирует ими инстанс модели и возвращает.
+        """
+        return cls(*[float(x) for x in file.split(',')])
 
 class LinearRegression(MLModel):
     """
@@ -115,6 +133,9 @@ class LinearRegression(MLModel):
 #         err_mu = mean_err
 #         err_sigma = (sum([(e-err_mu)**2 for e in errs])/(N-1))**0.5
         return dict(mean_error=mean_err, mean_squared_error=mean_serr)
+    
+    def get_params(self):
+        return self.b0, self.b1
 
 def pipeline(X, Y_true):
     """
