@@ -100,8 +100,32 @@ class PythonBot:
         dest = os.path.join(dir_path, message.document.file_name)
         await message.document.download(destination_file=dest)
 
-        task = os.path.splitext(message.document.file_name)[0]
-        res, log = run_tests(task, dir_path.replace(os.sep, '.'))
+        task, ext = os.path.splitext(message.document.file_name)
+        if ext == '.py':
+            res, log = run_tests(task=task, package=dir_path.replace(os.sep, '.'))
+        elif ext in ('.zip', '.tar'):
+            os.system(f"unzip -o {os.path.join(dir_path, message.document.file_name)} -d {dir_path}")
+            main_file = (os.path.join(dir_path, 'L15_HW_project.py'))
+            if not os.path.exists(main_file):
+                await message.answer(f"Отсутствует файл L15_HW_project.py")
+                return
+            else:
+                with open(main_file, 'r') as f:
+                    code = f.read()        
+                if not code.startswith("import mlmodels\n"):
+                    await message.answer(f"В файле L15_HW_project.py первая строка должна быть обязательно 'import mlmodels'")
+                    return
+                elif 'import' in code[6:]:
+                    await message.answer(f"В файле L15_HW_project.py слово import должно использоваться только один раз")
+                    return
+                else:
+                    code = "from . " + code
+                with open(main_file, 'w') as f:
+                    f.write(code)
+            res, log = run_tests(task=task, package=dir_path.replace(os.sep, '.'))
+        else:
+            await message.answer(f"Неверный формат файла {message.document.file_name}")
+            return
 
         if self.db_worker.is_completed(chat_id, task):
             await message.answer(f'Вы уже выполнили задачу {task}. Результаты проверки присланного варианта: {res}. Лог: {log}')

@@ -45,6 +45,7 @@ tasks = [
     'L12_HW_project',
     'L13_HW_project',
     'L14_HW_project',
+    'L15_HW_project',
 ]
 
 outs = [run(t, package) for t in tasks]

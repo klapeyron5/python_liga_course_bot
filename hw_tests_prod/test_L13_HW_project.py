@@ -70,6 +70,7 @@ def test_module(module):
     assert lr.save(file='') == '3.0,-4.0'
     assert inspect.ismethod(LinearRegression.load), "Метод load не является classmethod"
     loaded_lr = lr.load(file=lr.save(file=''))
+    assert isinstance(loaded_lr, LinearRegression)
     assert id(loaded_lr) != id(lr)
     assert loaded_lr.save(file='') == '3.0,-4.0'
     assert loaded_lr.predict(X) == [3-4,3-4*2.5,3]
