@@ -1,5 +1,5 @@
 from hw_tests_prod import utils as test
-from hw_examples import L13_HW_project
+from hw_examples import L14_HW_project
 import inspect, types
 import re, os, numpy as np
 from sklearn.linear_model import LinearRegression as skl_LinReg
@@ -67,15 +67,25 @@ def test_module(module):
     assert e == (1+2.5)/3
     assert se == (1+2.5**2)/3
 
-    assert lr.save(file='') == '3.0,-4.0'
+    file = os.path.join(os.path.dirname(module.__file__), 'model.saved')
+    lr.save(file=file)
     assert inspect.ismethod(LinearRegression.load), "Метод load не является classmethod"
-    loaded_lr = lr.load(file=lr.save(file=''))
+    with open(file, 'r') as f:
+        l = f.readlines()
+    assert len(l), "В файле сохраненной модели больше одной строки"
+    assert l[0] == '3.0,-4.0', "Строка сохранения модели в некорректном формате"
+    loaded_lr = lr.load(file=file)
+    assert isinstance(loaded_lr, LinearRegression)
     assert id(loaded_lr) != id(lr)
-    assert loaded_lr.save(file='') == '3.0,-4.0'
-    assert loaded_lr.predict(X) == [3-4,3-4*2.5,3]
+    assert loaded_lr.b0 == 3
+    assert loaded_lr.b1 == -4
 
     lr = LinearRegression(0.00004, 0.123467)
-    assert lr.save(file='') == '0.0,0.1235'
+    lr.save(file=file)
+    with open(file, 'r') as f:
+        l = f.readlines()
+    assert len(l), "В файле сохраненной модели больше одной строки"
+    assert l[0] == '0.0,0.1235', "Строка сохранения модели в некорректном формате"
 
     lr = LinearRegression()
     assert isinstance(lr, MLModel)
@@ -147,4 +157,4 @@ cases = [{test.INPUT_args: x, test.TEST_FUNC: test_func} for x in [
 
 
 def run(package_name):
-    return test._run('L13_HW_project', cases, func_name='pipeline', test_module=test_module, package_name=package_name)
+    return test._run('L14_HW_project', cases, func_name='pipeline', test_module=test_module, package_name=package_name)
